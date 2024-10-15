@@ -1,0 +1,85 @@
+#+TITLE: 
+#+AUTHOR: ATTA ULLAH
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#a-comparison-of-machine-learning-algorithms-for-regression-task][A Comparison of Machine Learning Algorithms for Regression Task]]
+  - [[#dataset][Dataset]]
+  - [[#machine-learning-algorithms][Machine Learning Algorithms]]
+  - [[#evaluation-metrics][Evaluation Metrics]]
+  - [[#regularization-techniques][Regularization Techniques]]
+- [[#links][Links]]
+- [[#][]]
+
+* A Comparison of Machine Learning Algorithms for Regression Task
+** Dataset
+We choose California housing Data from \cit{}
+The Author took it from 
+https://www.dcc.fc.up.pt/~ltorgo/Regression/cal_housing.html
+and modified it for data exploratory purposes.
+It has the following features
+
+20640 instances with 10 features
+
+|----+--------------------+-------------|
+|    | Feature            | Data Type   |
+|----+--------------------+-------------|
+|  1 | Longitude          | Continuous  |
+|  2 | Latitude           | Continuous  |
+|  3 | Housing Median Age | Continuous  |
+|  4 | Total Rooms        | Continuous  |
+|  5 | Total Bedrooms     | Continuous  |
+|  6 | Population         | Continuous  |
+|  7 | Households         | Continuous  |
+|  8 | Median Income      | Continuous  |
+|  9 | Media House Value  | Continuous  |
+| 10 | Ocean Proximity    | Categorical |
+|----+--------------------+-------------|
+
+
+
+Imputer
+One-Hot Incoding
+Feature Selection
+Feature Extraction
+
+
+** Machine Learning Algorithms
+*** Linear Regrssion
+
+
+f(x;\theta) =  \sum_{i=1}^{n}  w_i x_i + b
+
+Finding W
+
+Using normal equations
+Using SVD
+Using GD
+Using SGD
+Batch and mini batch gradient descent
+
+*** Support Vector Machine
+*** Random Forests
+*** Random Forests
+*** Boosting
+
+** Evaluation Metrics
+- Mean Square Error
+- Mean Absolute Error
+- Huber Loss??
+
+** Regularization Techniques
+*** Ridge regularization
+*** Lasso Regularization
+*** Elastic Nets
+*** Model Selection
+*** Testing
+*** Final Results
+
+
+* Links
+
+[[https://github.com/ageron/handson-ml2/blob/master/02_end_to_end_machine_learning_project.ipynb]]
+
+* 

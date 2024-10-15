@@ -80,4 +80,5 @@ housing_prepared = full_pipeline.fit_transform(housing)
 np.save("../datasets/housing_training_set_prepared.npy", housing_prepared)
 np.save("../datasets/housing_training_labels.npy", housing_labels)
 
+
 # Test Preapared
