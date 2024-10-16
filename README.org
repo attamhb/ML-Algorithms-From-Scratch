@@ -10,7 +10,6 @@
   - [[#evaluation-metrics][Evaluation Metrics]]
   - [[#regularization-techniques][Regularization Techniques]]
 - [[#links][Links]]
-- [[#][]]
 
 * A Comparison of Machine Learning Algorithms for Regression Task
 ** Dataset
@@ -44,7 +43,6 @@ One-Hot Incoding
 Feature Selection
 Feature Extraction
 
-
 ** Machine Learning Algorithms
 *** Linear Regrssion
 
@@ -60,7 +58,68 @@ Using SGD
 Batch and mini batch gradient descent
 
 *** Support Vector Machine
-*** Random Forests
+*** Decision Trees
+1. Gimin Imuprity
+   Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
+
+   Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
+
+   
+   IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
+
+
+
+   MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
+P(X) = |x|/n
+Stopping Criteria = max depth, min # of samples, min impurity decrease
+
+Stopping Criteria = max depth, min # of samples, min impurity decrease
+
+
+#+BEGIN_SRC python
+import numpy as np
+
+def split_dataset(X, y, feature_index, threshold):
+    """
+    Splits the dataset into two child nodes based on the specified feature and threshold.
+
+    Parameters:
+    - X: 2D array-like, shape (n_samples, n_features) - Feature dataset
+    - y: 1D array-like, shape (n_samples,) - Target values
+    - feature_index: int - Index of the feature to split on
+    - threshold: float - Threshold value for the split
+
+    Returns:
+    - left_X: 2D array - Subset of features for left node
+    - left_y: 1D array - Subset of target values for left node
+    - right_X: 2D array - Subset of features for right node
+    - right_y: 1D array - Subset of target values for right node
+    """
+    left_indices = np.where(X[:, feature_index] <= threshold)[0]
+    right_indices = np.where(X[:, feature_index] > threshold)[0]
+    
+    left_X = X[left_indices]
+    left_y = y[left_indices]
+    right_X = X[right_indices]
+    right_y = y[right_indices]
+    
+    return left_X, left_y, right_X, right_y
+
+# Example usage
+X = np.array([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]])  # Feature dataset
+y = np.array([0, 0, 1, 1, 1])  # Target values
+
+# Splitting the dataset on feature 0 with a threshold of 3
+left_X, left_y, right_X, right_y = split_dataset(X, y, feature_index=0, threshold=3)
+
+print("Left Node Features:\n", left_X)
+print("Left Node Targets:\n", left_y)
+print("Right Node Features:\n", right_X)
+print("Right Node Targets:\n", right_y)
+
+#+END_SRC 
+
+
 *** Random Forests
 *** Boosting
 
@@ -77,9 +136,6 @@ Batch and mini batch gradient descent
 *** Testing
 *** Final Results
 
-
 * Links
-
 [[https://github.com/ageron/handson-ml2/blob/master/02_end_to_end_machine_learning_project.ipynb]]
 
-* 
