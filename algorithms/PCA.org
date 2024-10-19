@@ -1,0 +1,43 @@
+#+TITLE: 
+#+AUTHOR: ATTA
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#principal-component-analysis-pca][Principal Component Analysis (PCA)]]
+- [[#mathematical-steps-of-pca][Mathematical Steps of PCA]]
+  - [[#standardization][Standardization]]
+  - [[#covariance-matrix][Covariance Matrix]]
+  - [[#eigenvalues-and-eigenvectors][Eigenvalues and Eigenvectors]]
+  - [[#sort-eigenvalues][Sort Eigenvalues]]
+  - [[#projection][Projection]]
+
+* Principal Component Analysis (PCA)
+  PCA is a statistical technique used for dimensionality reduction and data
+  analysis. It transforms the data into a new coordinate system, where the
+  greatest variance by any projection lies on the first coordinate (the first
+  principal component), the second greatest variance on the second coordinate,
+  and so on.
+
+* Mathematical Steps of PCA
+** Standardization
+   Center the data by subtracting the mean of each feature. If X is your data matrix with observations as rows and features as columns, calculate the mean vector μ and standardize X:
+   X_centered = X - μ
+
+** Covariance Matrix
+   Calculate the covariance matrix of the centered data:
+   Cov(X) = (1 / (n - 1)) * (X_centered^T * X_centered)
+   where n is the number of observations.
+
+** Eigenvalues and Eigenvectors
+   Compute the eigenvalues and eigenvectors of the covariance matrix. This can be done using the characteristic equation:
+   det(Cov(X) - λI) = 0
+   where λ represents the eigenvalues, and I is the identity matrix. The eigenvectors correspond to the directions of maximum variance.
+
+** Sort Eigenvalues
+   Sort the eigenvalues in descending order and select the top k eigenvalues and their corresponding eigenvectors. These eigenvectors form the new basis for the data.
+
+** Projection
+   Project the original data onto the new subspace defined by the selected eigenvectors. If W is the matrix of eigenvectors corresponding to the top k eigenvalues, the transformed data Z is given by:
+   Z = X_centered * W
+
