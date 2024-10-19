@@ -4,48 +4,21 @@
 #+OPTIONS: toc:2
 
 * Table of contents :toc:
-- [[#a-comparison-of-machine-learning-algorithms-for-regression-task][A Comparison of Machine Learning Algorithms for Regression Task]]
-  - [[#dataset][Dataset]]
-  - [[#machine-learning-algorithms][Machine Learning Algorithms]]
-  - [[#evaluation-metrics][Evaluation Metrics]]
-  - [[#regularization-techniques][Regularization Techniques]]
-- [[#links][Links]]
-- [[#dt][DT]]
+- [[#implementing-machine-learning-algorithms-from-scratch-with-python][Implementing Machine Learning Algorithms from Scratch With Python]]
+  - [[#k-nearest-neighbours][K Nearest Neighbours]]
+  - [[#logistic-regression][Logistic Regression]]
+  - [[#linear-regrssion][Linear Regrssion]]
+  - [[#support-vector-machine][Support Vector Machine]]
+  - [[#decision-trees][Decision Trees]]
+  - [[#random-forests][Random Forests]]
+  - [[#boosting][Boosting]]
+  - [[#princple-component-analysis][Princple Component Analysis]]
+  - [[#k-mean-algorithm][K-Mean Algorithm]]
 
-* A Comparison of Machine Learning Algorithms for Regression Task
-** Dataset
-We choose California housing Data from \cit{}
-The Author took it from 
-https://www.dcc.fc.up.pt/~ltorgo/Regression/cal_housing.html
-and modified it for data exploratory purposes.
-It has the following features
-
-20640 instances with 10 features
-
-|----+--------------------+-------------|
-|    | Feature            | Data Type   |
-|----+--------------------+-------------|
-|  1 | Longitude          | Continuous  |
-|  2 | Latitude           | Continuous  |
-|  3 | Housing Median Age | Continuous  |
-|  4 | Total Rooms        | Continuous  |
-|  5 | Total Bedrooms     | Continuous  |
-|  6 | Population         | Continuous  |
-|  7 | Households         | Continuous  |
-|  8 | Median Income      | Continuous  |
-|  9 | Media House Value  | Continuous  |
-| 10 | Ocean Proximity    | Categorical |
-|----+--------------------+-------------|
-
-
-
-Imputer
-One-Hot Incoding
-Feature Selection
-Feature Extraction
-
-** Machine Learning Algorithms
-*** Linear Regrssion
+* Implementing Machine Learning Algorithms from Scratch With Python
+** K Nearest Neighbours 
+** Logistic Regression 
+** Linear Regrssion 
 
 
 f(x;\theta) =  \sum_{i=1}^{n}  w_i x_i + b
@@ -58,13 +31,13 @@ Using GD
 Using SGD
 Batch and mini batch gradient descent
 
-*** Support Vector Machine
-*** Decision Trees
- - Gimin Imuprity
- - Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
- - Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
- - IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
- - MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
+** Support Vector Machine
+** Decision Trees
+- Gimin Imuprity
+- Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
+- Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
+- IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
+- MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
 Stopping Criteria = minimum loss, maximum depth,  
 
 - Choosing the feature for optimal split
@@ -75,84 +48,11 @@ Stopping Criteria = minimum loss, maximum depth,
 2. Checks the stopping criteria:  purity, maxi depth, or minimum IG
 3. Returns a leaf node (stops growing further) if a stopping criterion is met.
 4. Otherwise compute IG for all features at the current node and selects the
-   highest.
+highest.
 5. Splits at current node using the selected feature by creating
-   two new nodes: left and right and recurse.
+two new nodes: left and right and recurse.
 
-*** Random Forests
-*** Boosting
-** Evaluation Metrics
-- Mean Square Error
-- Mean Absolute Error
-- Huber Loss??
-** Regularization Techniques
-*** Ridge regularization
-*** Lasso Regularization
-*** Elastic Nets
-*** Model Selection
-*** Testing
-*** Final Results
-
-* Links
-[[https://github.com/ageron/handson-ml2/blob/master/02_end_to_end_machine_learning_project.ipynb]]
-
-
-* DT
-
-#+BEGIN_SRC  latex 
-\documentclass{article}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-
-\begin{document}
-
-\begin{algorithm}
-\caption{Build Decision Tree}
-\begin{algorithmic}[1]
-\Function{BuildTree}{data, depth}
-    \If{all labels in data are the same}
-        \State \Return create leaf node with label
-    \EndIf
-    \If{depth = max\_depth}
-        \State \Return create leaf node with majority label
-    \EndIf
-
-    \State best\_gini $\gets \infty$
-    \State best\_split $\gets$ None
-
-    \For{each feature in data.features}
-        \For{each threshold in unique values of feature}
-            \State left\_data, right\_data $\gets$ split(data, feature, threshold)
-
-            \If{left\_data is empty or right\_data is empty}
-                \State \textbf{continue}
-            \EndIf
-
-            \State gini $\gets \left(\frac{len(left\_data)}{len(data)}\right) \times GiniIndex(left\_data) + \left(\frac{len(right\_data)}{len(data)}\right) \times GiniIndex(right\_data)$
-
-            \If{gini < best\_gini}
-                \State best\_gini $\gets$ gini
-                \State best\_split $\gets$ (feature, threshold)
-            \EndIf
-        \EndFor
-    \EndFor
-
-    \If{best\_split is None}
-        \State \Return create leaf node with majority label
-    \EndIf
-
-    \State (feature, threshold) $\gets$ best\_split
-    \State left\_data, right\_data $\gets$ split(data, feature, threshold)
-
-    \State left\_branch $\gets$ BuildTree(left\_data, depth + 1)
-    \State right\_branch $\gets$ BuildTree(right\_data, depth + 1)
-
-    \State \Return create internal node with feature, threshold, left\_branch, right\_branch
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-\end{document}
-
-
-#+END_SRC  
+** Random Forests
+** Boosting
+** Princple Component Analysis
+** K-Mean Algorithm
