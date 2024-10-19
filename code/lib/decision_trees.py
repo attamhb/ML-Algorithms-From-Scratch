@@ -139,6 +139,11 @@ class DecisionTreeClassifier:
         probabilities = histogram / len(y)
         return -np.sum([p * np.log(p) for p in probabilities if p > 0])
 
+    def compute_gini_index(self, y):
+        histogram = np.bincount(y)
+        probabilities = histogram / len(y)
+        return 1 - np.sum([p ** 2 for p in probabilities])
+
     def get_most_common_label(self, y):
         counter = Counter(y)
         return counter.most_common(1)[0][0]
