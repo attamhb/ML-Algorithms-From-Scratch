@@ -1,0 +1,28 @@
+
+#+TITLE: 
+#+AUTHOR: ATTA
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#k-nearest-neighbors-knn][K-Nearest Neighbors (KNN)]]
+- [[#note][Note:]]
+
+* K-Nearest Neighbors (KNN) 
+KNN is a classification algorithm that classifies a data point based on the classes of its k nearest neighbors in the feature space.
+
+Distance Metric: Manhatten Distance or Euclidean Distance
+​
+Steps:
+
+- Calculate the distance from the test instance to all training instances.
+- Sort the distances and select the k nearest neighbors.
+- Count the class labels of the k nearest neighbors.
+- Assign the class label to the test instance based on majority voting.
+- Pseudocode for K-Nearest Neighbors
+
+* Note:
+k is a hyper-parameter; small values of k can be noisy, while large values can smooth out distinctions between classes.
+Distance Metric: The choice of distance metric can significantly affect the performance of the KNN algorithm. Common metrics include Euclidean, Manhattan, and Minkowski distances.
+Computational Complexity: 𝑂 (n \times m), where m is the number of features and n is number of attributes in dataset 
+

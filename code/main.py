@@ -9,6 +9,9 @@ from lib.RandomForest import RandomForestClassifier
 from lib.LinearRegression import LinearRegression
 from lib.LogisticRegression import LogisticRegression
 
+
+from lib.KNearestNeighbors import KNearestNeighbors
+from matplotlib.colors import ListedColormap
 #############################################################################
 # Evaluation metrics for classification and regression
 
@@ -59,11 +62,33 @@ logistic_regression_accuracy = compute_accuracy(
     y_test_bc, logistic_regression_predictions
 )
 
+# knearestneighbors
+
+
+cmap = ListedColormap(['#FF0000','#00FF00','#0000FF'])
+
+
+plt.figure()
+plt.scatter(features[:,2],features[:,3], c=labels, cmap=cmap, edgecolor='k', s=20)
+plt.show()
+
+
+clf = KNearestNeighbors(num_neighbors=5)
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)
+
+print(predictions)
+
+acc_knn = np.sum(predictions == y_test) / len(y_test)
+print(acc_knn)
+
+
 #############################################################################
 # Print classification results
 print("Decision Tree Accuracy:", decision_tree_accuracy)
 print("Random Forest Accuracy:", random_forest_accuracy)
 print("Logistic Regression Accuracy:", logistic_regression_accuracy)
+print("Knearestneighbors Accuracy", logistic_regression_accuracy)
 print()
 
 #################################################################################
@@ -119,3 +144,4 @@ plt.ylabel("Target")
 plt.legend()
 plt.show()
 #
+###
