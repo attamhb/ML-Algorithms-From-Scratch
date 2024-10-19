@@ -1,4 +1,5 @@
 from lib.decision_trees import DecisionTreeClassifier
+from lib.random_forset import RandomForestClassifier
 
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -38,4 +39,12 @@ def accuracy(y_test, y_pred):
     return np.sum(y_test == y_pred) / len(y_test)
 
 acc = accuracy(y_test, predictions)
+print(acc)
+
+
+clf = RandomForestClassifier(n_trees=20)
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)
+
+acc =  accuracy(y_test, predictions)
 print(acc)
