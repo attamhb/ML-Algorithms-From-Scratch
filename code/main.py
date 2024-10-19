@@ -5,6 +5,17 @@ X_traing = np.load("../datasets/housing_training_set_prepared.npy")
 y_traing = np.load("../datasets/housing_training_labels.npy")
 
 
+class Node:
+    def __init__(self, feature=None, threshold=None, left=None, right=None,*,value=None):
+        self.feature = feature
+        self.threshold = threshold
+        self.left = left
+        self.right = right
+        self.value = value
+        
+    def is_leaf_node(self):
+        return self.value is not None
+
 def parameters_with_normal_equations(X, y):
     """
     return weights for linear regression using normal equations.

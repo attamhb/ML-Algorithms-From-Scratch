@@ -1,0 +1,251 @@
+#+TITLE: Decision Trees 
+#+AUTHOR: ATTA
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#decision-trees][Decision Trees]]
+  - [[#gini-index-and-information-gain][Gini Index and Information Gain]]
+  - [[#entropy-and-information-gain][Entropy and Information Gain]]
+- [[#example-data-set-1][Example Data Set 1]]
+  - [[#parent-node][Parent Node]]
+  - [[#child-node-1][Child Node 1]]
+  - [[#child-node-2][Child Node 2]]
+  - [[#calculations][Calculations]]
+- [[#example-dataset-2][Example Dataset 2]]
+  - [[#deppth-1-only-one-node][Deppth 1: Only one Node]]
+  - [[#split][Split]]
+  - [[#depth-2-left][Depth 2 Left:]]
+  - [[#depth-2-right][Depth 2 Right:]]
+  - [[#depth-3--left-31][Depth 3:  Left 31]]
+  - [[#depth-3--right-31][Depth 3:  Right 31]]
+  - [[#depth-3--left-32][Depth 3:  Left 32]]
+  - [[#depth-3--right-32][Depth 3:  Right 32]]
+
+* Decision Trees
+** Gini Index and Information Gain
+#+BEGIN_SRC latex
+\[
+\text{Gini}(S) = 1 - \sum_{i=1}^{k} p_i^2
+\]
+
+\[
+\text{Gini Gain}(S, A) = \text{Gini}(S) - \sum_{v \in \text{Values}(A)} \left(
+\frac{|S_v|}{|S|} \cdot \text{Gini}(S_v) \right)
+\]
+#+END_SRC 
+
+** Entropy and Information Gain
+
+#+BEGIN_SRC latex
+\[
+\text{Entropy}(S) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\]
+
+\[
+\text{Information Gain}(S, A) = \text{Entropy}(S) - \sum_{v \in \text{Values}(A)}
+\left( \frac{|S_v|}{|S|} \cdot \text{Entropy}(S_v) \right)
+\]
+#+END_SRC 
+
+* Example Data Set 1
+
+** Parent Node
+| sepal length | sepal width | petal length | petal width | labels |
+|--------------|-------------|--------------|-------------|--------|
+| 5.0          | 3.5         | 1.6          | 0.2         | 0.0    |
+| 5.1          | 3.8         | 1.5          | 0.3         | 0.0    |
+| 5.7          | 2.8         | 4.1          | 1.3         | 1.0    |
+| 6.3          | 3.3         | 6.0          | 2.5         | 2.0    |
+| 5.5          | 2.4         | 3.8          | 1.1         | 1.0    |
+| 6.0          | 2.2         | 5.0          | 1.5         | 2.0    |
+
+- Class 0: 2 instances
+- Class 1: 2 instances
+- Class 2: 2 instances
+- Total Instances in Parent Node: 6
+
+** Child Node 1
+| sepal length | sepal width | petal length | petal width | labels |
+|--------------|-------------|--------------|-------------|--------|
+| 5.0          | 3.5         | 1.6          | 0.2         | 0.0    |
+| 5.1          | 3.8         | 1.5          | 0.3         | 0.0    |
+| 5.7          | 2.8         | 4.1          | 1.3         | 1.0    |
+
+- Class 0: 2 instances
+- Class 1: 1 instance
+- Total Instances in Child Node 1: 3
+
+** Child Node 2
+| sepal length | sepal width | petal length | petal width | labels |
+|--------------|-------------|--------------|-------------|--------|
+| 6.3          | 3.3         | 6.0          | 2.5         | 2.0    |
+| 5.5          | 2.4         | 3.8          | 1.1         | 1.0    |
+| 6.0          | 2.2         | 5.0          | 1.5         | 2.0    |
+
+- Class 1: 1 instance
+- Class 2: 2 instances
+- Total Instances in Child Node 2: 3
+
+** Calculations
+
+*** Parent Node 
+
+- p_0 = 2/6
+- p_1 = 2/6
+- p_2 = 2/6
+
+Gini_{parent} = 1 - ((p_0)^2 + (p_1)^2 + (p_2)^2) =  0.6667
+Entropy_{Parent} =  - (p_0 \log_2(p_0) + p_{1} \log_1(p_1) + p_2 \log_2(p_1)) = 1.585
+
+*** Child Node 1 
+
+- p_0 = 2/3
+- p_1 = 1/3
+
+Gini_{child1} = 0.4444
+Entropy_{child1} = 0.918
+
+*** Child Node 2 
+
+- p_1 = 1/3
+- p_2 = 2/3
+
+Gini_{child2} = 0.4444
+Entropy_{child2} = 0.918
+
+*** Information Gain Calculation
+Information Gain = Entropy_{parent} -
+          (N_{child1})/(N_{parent}) \times Entropy_{child1} - (N_{child2})/(N_{parent}) \times Entropy_{child2} = 0.667
+
+* Example Dataset 2
+The predictive variables are mearsured in cm.
+
+The labels are 
+
+0:setosa
+1:versicolor
+2:virginica
+
+
+** Deppth 1: Only one Node
+
+| sepal length | sepal width | petal length | petal width | labels |
+|          5.1 |         3.5 |          1.4 |         0.2 |    0.0 |
+|          4.9 |         3.0 |          1.4 |         0.2 |    0.0 |
+|          4.7 |         3.2 |          1.3 |         0.2 |    0.0 |
+|          4.6 |         3.1 |          1.5 |         0.2 |    0.0 |
+|          5.0 |         3.6 |          1.4 |         0.2 |    0.0 |
+|          6.7 |         3.1 |          4.4 |         1.4 |    1.0 |
+|          5.6 |         3.0 |          4.5 |         1.5 |    1.0 |
+|          5.8 |         2.7 |          4.1 |         1.0 |    1.0 |
+|          6.2 |         2.2 |          4.5 |         1.5 |    1.0 |
+|          5.6 |         2.5 |          3.9 |         1.1 |    1.0 |
+|          6.4 |         3.2 |          5.3 |         2.3 |    2.0 |
+|          6.5 |         3.0 |          5.5 |         1.8 |    2.0 |
+|          7.7 |         3.8 |          6.7 |         2.2 |    2.0 |
+|          7.7 |         2.6 |          6.9 |         2.3 |    2.0 |
+|          6.0 |         2.2 |          5.0 |         1.5 |    2.0 |
+|          6.7 |         3.0 |          5.2 |         2.3 |    2.0 |
+|          6.3 |         2.5 |          5.0 |         1.9 |    2.0 |
+|          6.5 |         3.0 |          5.2 |         2.0 |    2.0 |
+|          6.2 |         3.4 |          5.4 |         2.3 |    2.0 |
+|          5.9 |         3.0 |          5.1 |         1.8 |    2.0 |
+
+
+# Gini Index 0.667
+# Entropy 1.5
+ 
+** Split 
+
+ Choose a feature
+ and chooes a value of selected feature
+ split the tree
+
+ In this exmaple
+ We choos 'sepal length'
+ value = 5.6
+
+
+** Depth 2 Left: 
+
+| sepal length | sepal width | petal length | petal width | labels |            
+|          5.1 |         3.5 |          1.4 |         0.2 |    0.0 |
+|          4.9 |         3.0 |          1.4 |         0.2 |    0.0 |
+|          4.7 |         3.2 |          1.3 |         0.2 |    0.0 |
+|          4.6 |         3.1 |          1.5 |         0.2 |    0.0 |
+|          5.0 |         3.6 |          1.4 |         0.2 |    0.0 |
+|          5.6 |         3.0 |          4.5 |         1.5 |    1.0 |
+|          5.6 |         2.5 |          3.9 |         1.1 |    1.0 |
+ 
+# Gini: 0.40816
+# entropy: 0.86
+
+** Depth 2 Right: 
+| sepal length | sepal width | petal length | petal width | labels |
+|          6.7 |         3.1 |          4.4 |         1.4 |    1.0 |
+|          5.8 |         2.7 |          4.1 |         1.0 |    1.0 |
+|          6.2 |         2.2 |          4.5 |         1.5 |    1.0 |
+|          6.4 |         3.2 |          5.3 |         2.3 |    2.0 |
+|          6.5 |         3.0 |          5.5 |         1.8 |    2.0 |
+|          7.7 |         3.8 |          6.7 |         2.2 |    2.0 |
+|          7.7 |         2.6 |          6.9 |         2.3 |    2.0 |
+|          6.0 |         2.2 |          5.0 |         1.5 |    2.0 |
+|          6.7 |         3.0 |          5.2 |         2.3 |    2.0 |
+|          6.3 |         2.5 |          5.0 |         1.9 |    2.0 |
+|          6.5 |         3.0 |          5.2 |         2.0 |    2.0 |
+|          6.2 |         3.4 |          5.4 |         2.3 |    2.0 |
+|          5.9 |         3.0 |          5.1 |         1.8 |    2.0 |
+
+# Gini: 0.3550 
+# Entropy: 0.7793
+
+
+# Gini IG:    0.67 -  (7/20)(0.40816) - (13/20)(0.3550)
+# Entropy IG: 1.50 -  (7/20)(0.86) - (13/20)(0.7793)
+
+** Depth 3:  Left 31
+
+| sepal length | sepal width | petal length | petal width | labels |
+|          4.9 |         3.0 |          1.4 |         0.2 |    0.0 |
+|          5.6 |         3.0 |          4.5 |         1.5 |    1.0 |
+|          5.6 |         2.5 |          3.9 |         1.1 |    1.0 |
+
+# Gini 0.444
+# Entropy 0.9182
+
+** Depth 3:  Right 31
+
+| sepal length | sepal width | petal length | petal width | labels |
+|          5.1 |         3.5 |          1.4 |         0.2 |    0.0 |
+|          4.7 |         3.2 |          1.3 |         0.2 |    0.0 |
+|          4.6 |         3.1 |          1.5 |         0.2 |    0.0 |
+|          5.0 |         3.6 |          1.4 |         0.2 |    0.0 |
+
+# Gini: 0.0
+# Entropy: 0.0
+
+** Depth 3:  Left 32
+
+| sepal length | sepal width | petal length | petal width | labels |
+|          5.8 |         2.7 |          4.1 |         1.0 |    1.0 |
+|          6.2 |         2.2 |          4.5 |         1.5 |    1.0 |
+|          6.5 |         3.0 |          5.5 |         1.8 |    2.0 |
+|          7.7 |         2.6 |          6.9 |         2.3 |    2.0 |
+|          6.0 |         2.2 |          5.0 |         1.5 |    2.0 |
+|          6.7 |         3.0 |          5.2 |         2.3 |    2.0 |
+|          6.3 |         2.5 |          5.0 |         1.9 |    2.0 |
+|          6.5 |         3.0 |          5.2 |         2.0 |    2.0 |
+|          5.9 |         3.0 |          5.1 |         1.8 |    2.0 |
+# Gini 0.35
+# Entropy 0.7642
+
+** Depth 3:  Right 32
+| sepal length | sepal width | petal length | petal width | labels |
+|          6.7 |         3.1 |          4.4 |         1.4 |    1.0 |
+|          6.4 |         3.2 |          5.3 |         2.3 |    2.0 |
+|          7.7 |         3.8 |          6.7 |         2.2 |    2.0 |
+|          6.2 |         3.4 |          5.4 |         2.3 |    2.0 |
+
+# Gini 0.375
+# Entropy: 0.811

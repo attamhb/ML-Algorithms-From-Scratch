@@ -1,119 +1,184 @@
 import numpy as np
 
 
-def compute_gini_impurity(data):
-    total_instances = len(data)
-    if total_instances == 0:
-        return 0
+class DecisionTreeNode:
+    def __init__(
+        self,
+        feature_index=None,
+        threshold=None,
+        left=None,
+        right=None,
+        value=None,
+    ):
+        self.feature_index = feature_index  # Index of the feature to split on
+        self.threshold = threshold  # Threshold value for the split
+        self.left = left  # Left child node
+        self.right = right  # Right child node
+        self.value = value  # Class label (if leaf node)
 
-    classes, counts = np.unique(data, return_counts=True)
-    probabilities = counts / total_instances
 
-    gini = 1 - np.sum(probabilities**2)
+def gini_index(y):
+    classes, counts = np.unique(y, return_counts=True)
+    gini = 1.0 - sum((count / len(y)) ** 2 for count in counts)
     return gini
 
 
-def compute_entropy(data):
-    total_instances = len(data)
-    if total_instances == 0:
-        return 0
-
-    classes, counts = np.unique(data, return_counts=True)
-    probabilities = counts / total_instances
-    entropy_value = -np.sum(probabilities * np.log2(probabilities))
-    return entropy_value
+def entropy(y):
+    classes, counts = np.unique(y, return_counts=True)
+    probs = counts / len(y)
+    return -np.sum(p * np.log2(p) for p in probs if p > 0)
 
 
-def compute_mse(data):
-    if len(data) == 0:
-        return 0
-    mean_value = np.mean(data)
-    return np.mean((data - mean_value) ** 2)
+def find_best_split(X, y, criterion='gini'):
+    best_gini = float('inf')
+    best_entropy = float('inf')
+    best_split = None
+
+    for feature_index in range(X.shape[1]):
+        thresholds = np.unique(X[:, feature_index])
+        for threshold in thresholds:
+            left_mask = X[:, feature_index] <= threshold
+            right_mask = X[:, feature_index] > threshold
+
+            y_left, y_right = y[left_mask], y[right_mask]
+
+            if len(y_left) == 0 or len(y_right) == 0:
+                continue
+
+            if criterion == 'gini':
+                gini = (len(y_left) / len(y)) * gini_index(y_left) + (
+                    len(y_right) / len(y)
+                ) * gini_index(y_right)
+                if gini < best_gini:
+                    best_gini = gini
+                    best_split = (feature_index, threshold)
+                    print()
+                    print(
+                        f"Feature Index: {feature_index} and , Threshold:{threshold}"
+                    )
+                    print(f"Best Split: {best_split}")
+
+            elif criterion == 'entropy':
+                entropy_value = (len(y_left) / len(y)) * entropy(y_left) + (
+                    len(y_right) / len(y)
+                ) * entropy(y_right)
+                if entropy_value < best_entropy:
+                    best_entropy = entropy_value
+                    best_split = (feature_index, threshold)
+
+    return best_split
 
 
-def calculate_information_gain_with_entropy(data, feature, target):
-    total_entropy = compute_entropy(target)
+def build_tree(X, y, criterion='gini', max_depth=None, depth=0):
+    if len(set(y)) == 1:  # Only one class left
+        return DecisionTreeNode(value=y[0])
 
-    # Get unique values of the feature
-    feature_values = np.unique(feature)
+    if max_depth is not None and depth >= max_depth:  # Maximum depth reached
+        return DecisionTreeNode(
+            value=np.bincount(y).argmax()
+        )  # Majority class
 
-    # Calculate the weighted entropy after the split
-    weighted_entropy = 0
-    total_instances = len(target)
+    best_split = find_best_split(X, y, criterion)
+    if best_split is None:  # No valid split found
+        return DecisionTreeNode(value=np.bincount(y).argmax())
 
-    for value in feature_values:
-        subset_indices = np.where(feature == value)[0]
-        subset = target[subset_indices]
-        subset_entropy = compute_entropy(subset)
-        weighted_entropy += (len(subset) / total_instances) * subset_entropy
+    feature_index, threshold = best_split
+    left_mask = X[:, feature_index] <= threshold
+    right_mask = X[:, feature_index] > threshold
 
-    # Information Gain
-    ig = total_entropy - weighted_entropy
-    return ig
+    left_node = build_tree(
+        X[left_mask], y[left_mask], criterion, max_depth, depth + 1
+    )
+    right_node = build_tree(
+        X[right_mask], y[right_mask], criterion, max_depth, depth + 1
+    )
 
-
-def calculate_information_gain_with_gini(data, feature, target):
-    total_gini = compute_gini_impurity(target)
-
-    # Get unique values of the feature
-    feature_values = np.unique(feature)
-
-    # Calculate the weighted Gini impurity after the split
-    weighted_gini = 0
-    total_instances = len(target)
-
-    for value in feature_values:
-        subset_indices = np.where(feature == value)[0]
-        subset = target[subset_indices]
-        subset_gini = compute_gini_impurity(subset)
-        weighted_gini += (len(subset) / total_instances) * subset_gini
-
-    ig = total_gini - weighted_gini
-    return ig
+    return DecisionTreeNode(feature_index, threshold, left_node, right_node)
 
 
-def information_gain_mse(data, feature, target):
-    total_mse = compute_mse(target)
+def predict(node, x):
+    if node.value is not None:  # Leaf node
+        return node.value
+    if x[node.feature_index] <= node.threshold:
+        return predict(node.left, x)
+    else:
+        return predict(node.right, x)
 
-    # Get unique values of the feature
-    feature_values = np.unique(feature)
 
-    # Calculate the weighted MSE after the split
-    weighted_mse = 0
-    total_instances = len(target)
+# Example usage
+# tree = build_tree(X_train, y_train, criterion='gini', max_depth=5)
+# prediction = predict(tree, new_data_point)
 
-    for value in feature_values:
-        subset_indices = np.where(feature == value)[0]
-        subset = target[subset_indices]
-        subset_mse = compute_mse(subset)
-        weighted_mse += (len(subset) / total_instances) * subset_mse
 
-    # Information Gain based on MSE
-    ig = total_mse - weighted_mse
-    return ig
+class ClassificatonInformationGain:
+
+    def __init__(self, data, labels, loss_f):
+        self.data = data
+        self.labels = labels
+        self.loss_f = loss_f
+
+        if self.total_instances == 0:
+            return 0
+
+    def compute_values(data, feature, target):
+        total_loss = self.compute_loss(target)
+        feature_values = np.unique(feature)
+        weighted_entropy = 0
+        total_instances = len(target)
+
+        for value in feature_values:
+            subset_indices = np.where(feature == value)[0]
+            subset = target[subset_indices]
+            subset_entropy = self.compute_loss(subset)
+            weighted_entropy += (
+                len(subset) / total_instances
+            ) * subset_entropy
+
+        ig = total_loss - weighted_entropy
+        return ig
+
+    def compute_loss(X):
+
+        total_instances = len(X)
+        classes, counts = np.unique(X, return_counts=True)
+        probabilities = counts / total_instances
+
+        if self.loss_f == "gini":
+            return 1 - np.sum(probabilities**2)
+        elif self.loss_f == "entropy":
+            return -np.sum(probabilities * np.log2(probabilities))
+
+
+class RegressionInformationGain:
+    def __init__(self, data):
+        self.data = data
+
+    def compute_mse(self, data):
+        if len(data) == 0:
+            return 0
+        mean_value = np.mean(data)
+        return np.mean((data - mean_value) ** 2)
+
+    def information_gain_mse(data, feature, target):
+        total_mse = self.compute_mse(target)
+        feature_values = np.unique(feature)
+        weighted_mse = 0
+        total_instances = len(target)
+
+        for value in feature_values:
+            subset_indices = np.where(feature == value)[0]
+            subset = target[subset_indices]
+            subset_mse = self.compute_mse(subset)
+            weighted_mse += (len(subset) / total_instances) * subset_mse
+
+        ig = total_mse - weighted_mse
+        return ig
 
 
 # Example dataset
-
-data = ['A', 'A', 'A', 'B', 'B', 'C', 'C', 'C', 'C', 'C']
-feature_A = np.array([0, 0, 0, 1, 1, 1, 1, 1])  # Feature A
-classes = np.array(['A', 'A', 'B', 'B', 'B', 'C', 'C', 'C'])  # Target class
-
-gini_value = compute_gini_impurity(data)
-
-ig_value = calculate_information_gain_with_entropy(classes, feature_A, classes)
-
-ig_value_gini = calculate_information_gain_with_gini(
-    classes, feature_A, classes
-)
-
-print(f"Information Gain: {ig_value:.4f}")
-print(f"Gini Impurity: {gini_value:.4f}")
-print(f"Information Gain (Gini): {ig_value_gini:.4f}")
-
+classification_data = ['A', 'A', 'A', 'B', 'B', 'C', 'C', 'C', 'C', 'C']
+classification_feature = np.array([0, 0, 0, 1, 1, 1, 1, 1])  # Feature A
 
 # Example dataset
-feature_A = np.array([0, 0, 0, 1, 1, 1, 1, 1])  # Feature A
-target = np.array([10, 12, 11, 20, 21, 19, 22, 25])  # Target variable
-ig_value_mse = information_gain_mse(target, feature_A, target)
-print(f"Information Gain (MSE): {ig_value_mse:.4f}")
+regression_data = ['A', 'A', 'A', 'B', 'B', 'C', 'C', 'C', 'C', 'C']
+regression_feature = np.array([0, 0, 0, 1, 1, 1, 1, 1])  # Feature A

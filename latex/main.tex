@@ -1,0 +1,57 @@
+% \documentclass{article}
+% \usepackage{algorithm}
+% \usepackage{algorithmic}
+
+\begin{document}
+
+\begin{algorithm}
+\caption{Build Decision Tree}
+\begin{algorithmic}[1]
+\Function{BuildTree}{data, depth}
+    \If{all labels in data are the same}
+        \State \Return create leaf node with label
+    \EndIf
+    \If{depth = max\_depth}
+        \State \Return create leaf node with majority label
+    \EndIf
+
+    \State best\_gini $\gets \infty$
+    \State best\_split $\gets$ None
+
+    \For{each feature in data.features}
+        \For{each threshold in unique values of feature}
+            \State left\_data, right\_data $\gets$ split(data, feature, threshold)
+
+            \If{left\_data is empty or right\_data is empty}
+                \State \textbf{continue}
+            \EndIf
+
+            \State gini $\gets \left(\frac{len(left\_data)}{len(data)}\right) \times GiniIndex(left\_data) + \left(\frac{len(right\_data)}{len(data)}\right) \times GiniIndex(right\_data)$
+
+            \If{gini < best\_gini}
+                \State best\_gini $\gets$ gini
+                \State best\_split $\gets$ (feature, threshold)
+            \EndIf
+        \EndFor
+    \EndFor
+
+    \If{best\_split is None}
+        \State \Return create leaf node with majority label
+    \EndIf
+
+    \State (feature, threshold) $\gets$ best\_split
+    \State left\_data, right\_data $\gets$ split(data, feature, threshold)
+
+    \State left\_branch $\gets$ BuildTree(left\_data, depth + 1)
+    \State right\_branch $\gets$ BuildTree(right\_data, depth + 1)
+
+    \State \Return create internal node with feature, threshold, left\_branch, right\_branch
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: t
+%%% End:

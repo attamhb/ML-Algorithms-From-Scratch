@@ -10,6 +10,7 @@
   - [[#evaluation-metrics][Evaluation Metrics]]
   - [[#regularization-techniques][Regularization Techniques]]
 - [[#links][Links]]
+- [[#dt][DT]]
 
 * A Comparison of Machine Learning Algorithms for Regression Task
 ** Dataset
@@ -59,75 +60,31 @@ Batch and mini batch gradient descent
 
 *** Support Vector Machine
 *** Decision Trees
-1. Gimin Imuprity
-   Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
+ - Gimin Imuprity
+ - Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
+ - Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
+ - IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
+ - MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
+Stopping Criteria = minimum loss, maximum depth,  
 
-   Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
+- Choosing the feature for optimal split
+- Measure of impurity:  GINI, enropy, information gain
+- Stopping criterian: maximum depth, lowerst IG, purity of a node
 
-   
-   IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
-
-
-
-   MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
-P(X) = |x|/n
-Stopping Criteria = max depth, min # of samples, min impurity decrease
-
-Stopping Criteria = max depth, min # of samples, min impurity decrease
-
-
-#+BEGIN_SRC python
-import numpy as np
-
-def split_dataset(X, y, feature_index, threshold):
-    """
-    Splits the dataset into two child nodes based on the specified feature and threshold.
-
-    Parameters:
-    - X: 2D array-like, shape (n_samples, n_features) - Feature dataset
-    - y: 1D array-like, shape (n_samples,) - Target values
-    - feature_index: int - Index of the feature to split on
-    - threshold: float - Threshold value for the split
-
-    Returns:
-    - left_X: 2D array - Subset of features for left node
-    - left_y: 1D array - Subset of target values for left node
-    - right_X: 2D array - Subset of features for right node
-    - right_y: 1D array - Subset of target values for right node
-    """
-    left_indices = np.where(X[:, feature_index] <= threshold)[0]
-    right_indices = np.where(X[:, feature_index] > threshold)[0]
-    
-    left_X = X[left_indices]
-    left_y = y[left_indices]
-    right_X = X[right_indices]
-    right_y = y[right_indices]
-    
-    return left_X, left_y, right_X, right_y
-
-# Example usage
-X = np.array([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]])  # Feature dataset
-y = np.array([0, 0, 1, 1, 1])  # Target values
-
-# Splitting the dataset on feature 0 with a threshold of 3
-left_X, left_y, right_X, right_y = split_dataset(X, y, feature_index=0, threshold=3)
-
-print("Left Node Features:\n", left_X)
-print("Left Node Targets:\n", left_y)
-print("Right Node Features:\n", right_X)
-print("Right Node Targets:\n", right_y)
-
-#+END_SRC 
-
+1. Creates a new node.
+2. Checks the stopping criteria:  purity, maxi depth, or minimum IG
+3. Returns a leaf node (stops growing further) if a stopping criterion is met.
+4. Otherwise compute IG for all features at the current node and selects the
+   highest.
+5. Splits at current node using the selected feature by creating
+   two new nodes: left and right and recurse.
 
 *** Random Forests
 *** Boosting
-
 ** Evaluation Metrics
 - Mean Square Error
 - Mean Absolute Error
 - Huber Loss??
-
 ** Regularization Techniques
 *** Ridge regularization
 *** Lasso Regularization
@@ -139,3 +96,63 @@ print("Right Node Targets:\n", right_y)
 * Links
 [[https://github.com/ageron/handson-ml2/blob/master/02_end_to_end_machine_learning_project.ipynb]]
 
+
+* DT
+
+#+BEGIN_SRC  latex 
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\begin{document}
+
+\begin{algorithm}
+\caption{Build Decision Tree}
+\begin{algorithmic}[1]
+\Function{BuildTree}{data, depth}
+    \If{all labels in data are the same}
+        \State \Return create leaf node with label
+    \EndIf
+    \If{depth = max\_depth}
+        \State \Return create leaf node with majority label
+    \EndIf
+
+    \State best\_gini $\gets \infty$
+    \State best\_split $\gets$ None
+
+    \For{each feature in data.features}
+        \For{each threshold in unique values of feature}
+            \State left\_data, right\_data $\gets$ split(data, feature, threshold)
+
+            \If{left\_data is empty or right\_data is empty}
+                \State \textbf{continue}
+            \EndIf
+
+            \State gini $\gets \left(\frac{len(left\_data)}{len(data)}\right) \times GiniIndex(left\_data) + \left(\frac{len(right\_data)}{len(data)}\right) \times GiniIndex(right\_data)$
+
+            \If{gini < best\_gini}
+                \State best\_gini $\gets$ gini
+                \State best\_split $\gets$ (feature, threshold)
+            \EndIf
+        \EndFor
+    \EndFor
+
+    \If{best\_split is None}
+        \State \Return create leaf node with majority label
+    \EndIf
+
+    \State (feature, threshold) $\gets$ best\_split
+    \State left\_data, right\_data $\gets$ split(data, feature, threshold)
+
+    \State left\_branch $\gets$ BuildTree(left\_data, depth + 1)
+    \State right\_branch $\gets$ BuildTree(right\_data, depth + 1)
+
+    \State \Return create internal node with feature, threshold, left\_branch, right\_branch
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}
+
+
+#+END_SRC  
