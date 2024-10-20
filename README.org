@@ -5,26 +5,25 @@
 
 * Table of contents :toc:
 - [[#implementing-machine-learning-algorithms-from-scratch-with-python][Implementing Machine Learning Algorithms from Scratch With Python]]
-  - [[#k-nearest-neighbours][K Nearest Neighbours]]
+  - [[#k-nearest-neighbors][K-Nearest Neighbors]]
   - [[#logistic-regression][Logistic Regression]]
   - [[#linear-regrssion][Linear Regrssion]]
-  - [[#support-vector-machine][Support Vector Machine]]
+  - [[#support-vector-machines][Support Vector Machines]]
   - [[#decision-trees][Decision Trees]]
-  - [[#random-forests][Random Forests]]
+  - [[#forests][Forests]]
   - [[#boosting][Boosting]]
-  - [[#princple-component-analysis][Princple Component Analysis]]
+  - [[#principal-component-analysis][Principal Component Analysis]]
   - [[#k-mean-algorithm][K-Mean Algorithm]]
 
 * Implementing Machine Learning Algorithms from Scratch With Python
   In this project, I have implemented several machine learning algorithms in Python.
   
-** K Nearest Neighbours 
-** Logistic Regression 
-** Linear Regrssion 
-** Support Vector Machine
-[[./algorithms/SupportVectorMachines.org][Support Vector Machines]]
-** Decision Trees
-** Random Forests
+** [[./algorithm/KNearestNeighbours][K-Nearest Neighbors]]
+** [[./algorithms/LogisticRegression.org][Logistic Regression]]
+** [[./algorithms/LinearRegression.org][Linear Regrssion]]
+** [[./algorithms/SupportVectorMachines.org][Support Vector Machines]]
+** [[./algorithms/DecisionTrees.org][Decision Trees]]
+** [[./algorithms/RandomForests.org][Forests]]
 ** Boosting
-** Princple Component Analysis
+** [[./algorithms/PCA.org][Principal Component Analysis]]
 ** K-Mean Algorithm
