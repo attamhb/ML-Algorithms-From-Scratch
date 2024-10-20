@@ -14,13 +14,13 @@
 * Support Vector Machines (SVMs)
 
 Given a training dataset with n samples:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 {(\mathbf{x}_i, y_i)}_{i=1}^n
 #+END_SRC
 where \( \mathbf{x}_i \in \mathbb{R}^d \) is the feature vector and \( y_i \in \{-1, 1\} \) is the class label.
 
 The hyperplane can be represented as:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 \mathbf{w} \cdot \mathbf{x} + b = 0
 #+END_SRC
 where:
@@ -32,21 +32,21 @@ The margin is defined as the distance between the hyperplane and the nearest dat
 ** Optimization Problem
 
 The goal of SVM is to solve the following optimization problem:
-#+BEGIN_SRC
+#+BEGIN_SRC  latex
 \min_{\mathbf{w}, b} \frac{1}{2} \|\mathbf{w}\|^2
 #+END_SRC
 subject to the constraints:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 y_i (\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1 \quad \forall i
 #+END_SRC
 
 ** Soft Margin
 In practice, data may not be perfectly separable. To handle this, SVM introduces a soft margin with slack variables \( \xi_i \):
-#+BEGIN_SRC
+#+BEGIN_SRC  latex
 \min_{\mathbf{w}, b, \xi} \frac{1}{2} \|\mathbf{w}\|^2 + C \sum_{i=1}^n \xi_i
 #+END_SRC
 subject to:
-#+BEGIN_SRC
+#+BEGIN_SRC  latex
 y_i (\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1 - \xi_i
 \xi_i \geq 0 \quad \forall i
 #+END_SRC
@@ -54,18 +54,18 @@ where \( C \) is a regularization parameter that controls the trade-off between 
 
 ** Dual Problem
 The optimization problem can also be expressed in its dual form:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 \max_{\alpha} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i,j=1}^n y_i y_j \alpha_i \alpha_j \mathbf{x}_i \cdot \mathbf{x}_j
 #+END_SRC
 subject to:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 0 \leq \alpha_i \leq C, \quad \sum_{i=1}^n \alpha_i y_i = 0
 #+END_SRC
 where \( \alpha_i \) are the Lagrange multipliers.
 
 ** Decision Function
 Once the optimal \( \mathbf{w} \) and \( b \) are determined, the decision function for a new data point \( \mathbf{x} \) can be formulated as:
-#+BEGIN_SRC
+#+BEGIN_SRC latex
 f(\mathbf{x}) = \text{sign}(\mathbf{w} \cdot \mathbf{x} + b)
 #+END_SRC
 
