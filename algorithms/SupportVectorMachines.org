@@ -1,0 +1,77 @@
+#+TITLE: 
+#+AUTHOR: ATTA
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#support-vector-machines-svms][Support Vector Machines (SVMs)]]
+  - [[#optimization-problem][Optimization Problem]]
+  - [[#soft-margin][Soft Margin]]
+  - [[#dual-problem][Dual Problem]]
+  - [[#decision-function][Decision Function]]
+  - [[#kernel-trick][Kernel Trick]]
+
+* Support Vector Machines (SVMs)
+
+Given a training dataset with n samples:
+#+BEGIN_SRC
+{(\mathbf{x}_i, y_i)}_{i=1}^n
+#+END_SRC
+where \( \mathbf{x}_i \in \mathbb{R}^d \) is the feature vector and \( y_i \in \{-1, 1\} \) is the class label.
+
+The hyperplane can be represented as:
+#+BEGIN_SRC
+\mathbf{w} \cdot \mathbf{x} + b = 0
+#+END_SRC
+where:
+- \( \mathbf{w} \) is the weight vector,
+- \( b \) is the bias term.
+
+The margin is defined as the distance between the hyperplane and the nearest data points from either class. SVM aims to maximize this margin. The points that lie closest to the hyperplane and influence its position are called support vectors.
+
+** Optimization Problem
+
+The goal of SVM is to solve the following optimization problem:
+#+BEGIN_SRC
+\min_{\mathbf{w}, b} \frac{1}{2} \|\mathbf{w}\|^2
+#+END_SRC
+subject to the constraints:
+#+BEGIN_SRC
+y_i (\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1 \quad \forall i
+#+END_SRC
+
+** Soft Margin
+In practice, data may not be perfectly separable. To handle this, SVM introduces a soft margin with slack variables \( \xi_i \):
+#+BEGIN_SRC
+\min_{\mathbf{w}, b, \xi} \frac{1}{2} \|\mathbf{w}\|^2 + C \sum_{i=1}^n \xi_i
+#+END_SRC
+subject to:
+#+BEGIN_SRC
+y_i (\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1 - \xi_i
+\xi_i \geq 0 \quad \forall i
+#+END_SRC
+where \( C \) is a regularization parameter that controls the trade-off between maximizing the margin and minimizing the classification error.
+
+** Dual Problem
+The optimization problem can also be expressed in its dual form:
+#+BEGIN_SRC
+\max_{\alpha} \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i,j=1}^n y_i y_j \alpha_i \alpha_j \mathbf{x}_i \cdot \mathbf{x}_j
+#+END_SRC
+subject to:
+#+BEGIN_SRC
+0 \leq \alpha_i \leq C, \quad \sum_{i=1}^n \alpha_i y_i = 0
+#+END_SRC
+where \( \alpha_i \) are the Lagrange multipliers.
+
+** Decision Function
+Once the optimal \( \mathbf{w} \) and \( b \) are determined, the decision function for a new data point \( \mathbf{x} \) can be formulated as:
+#+BEGIN_SRC
+f(\mathbf{x}) = \text{sign}(\mathbf{w} \cdot \mathbf{x} + b)
+#+END_SRC
+
+** Kernel Trick
+To handle non-linear data, SVMs use the kernel trick, which allows us to operate in a high-dimensional space without explicitly computing the coordinates of the data in that space. Common kernels include:
+- Linear Kernel: \( K(\mathbf{x}_i, \mathbf{x}_j) = \mathbf{x}_i \cdot \mathbf{x}_j \)
+- Polynomial Kernel: \( K(\mathbf{x}_i, \mathbf{x}_j) = (\mathbf{x}_i \cdot \mathbf{x}_j + c)^d \)
+- RBF Kernel: \( K(\mathbf{x}_i, \mathbf{x}_j) = e^{-\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2} \)
+
