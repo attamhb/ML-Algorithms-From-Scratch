@@ -16,42 +16,14 @@
   - [[#k-mean-algorithm][K-Mean Algorithm]]
 
 * Implementing Machine Learning Algorithms from Scratch With Python
+  In this project, I have implemented several machine learning algorithms in Python.
+  
 ** K Nearest Neighbours 
 ** Logistic Regression 
 ** Linear Regrssion 
-
-
-f(x;\theta) =  \sum_{i=1}^{n}  w_i x_i + b
-
-Finding W
-
-Using normal equations
-Using SVD
-Using GD
-Using SGD
-Batch and mini batch gradient descent
-
 ** Support Vector Machine
+[[./algorithms/SupportVectorMachines.org][Support Vector Machines]]
 ** Decision Trees
-- Gimin Imuprity
-- Gini(D) = 1 - \sum_{i=1}^{C} p_i^2
-- Entropy(D) = - \sum_{i=1}^{C} p_i \log_2(p_i)
-- IG(D, A) = Entropy(D) - \sum_{v \in Values(A)} \frac{|D_v|}{|D|} Entropy(D_v)
-- MSE(D) = \frac{1}{|D|} \sum_{i=1}^{|D|} (y_i - \bar{y})^2
-Stopping Criteria = minimum loss, maximum depth,  
-
-- Choosing the feature for optimal split
-- Measure of impurity:  GINI, enropy, information gain
-- Stopping criterian: maximum depth, lowerst IG, purity of a node
-
-1. Creates a new node.
-2. Checks the stopping criteria:  purity, maxi depth, or minimum IG
-3. Returns a leaf node (stops growing further) if a stopping criterion is met.
-4. Otherwise compute IG for all features at the current node and selects the
-highest.
-5. Splits at current node using the selected feature by creating
-two new nodes: left and right and recurse.
-
 ** Random Forests
 ** Boosting
 ** Princple Component Analysis
