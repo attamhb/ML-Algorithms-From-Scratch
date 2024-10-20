@@ -1,4 +1,4 @@
-
+# imports
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import datasets
@@ -12,17 +12,7 @@ from lib.LogisticRegression import LogisticRegression
 
 from lib.KNearestNeighbors import KNearestNeighbors
 from matplotlib.colors import ListedColormap
-#############################################################################
-# Evaluation metrics for classification and regression
-
-
-def compute_accuracy(true_labels, predicted_labels):
-    return np.sum(true_labels == predicted_labels) / len(true_labels)
-
-
-def compute_mean_squared_error(true_labels, predicted_labels):
-    return np.mean((true_labels - predicted_labels) ** 2)
-
+from lib.utils import compute_accuracy, compute_mean_squared_error
 
 #############################################################################
 # Load and split the iris dataset

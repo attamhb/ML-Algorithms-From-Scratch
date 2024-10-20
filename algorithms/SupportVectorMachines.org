@@ -2,6 +2,8 @@
 #+AUTHOR: ATTA
 #+STARTUP: overview
 #+OPTIONS: toc:2
+#+OPTIONS: tex:t
+
 
 * Table of contents :toc:
 - [[#support-vector-machines-svms][Support Vector Machines (SVMs)]]
