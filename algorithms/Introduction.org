@@ -1,0 +1,15 @@
+#+TITLE: 
+#+AUTHOR: ATTA
+#+STARTUP: overview
+#+OPTIONS: toc:2
+
+* Table of contents :toc:
+- [[#introduction][Introduction]]
+
+* Introduction
+
+Let x in R^d,
+  f:R^d:\to {-1,1} is obtained from  training set. 
+
+  
+  
