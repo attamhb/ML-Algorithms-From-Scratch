@@ -1,62 +1,46 @@
 import numpy as np
-import pandas as pd
+
 
 class NaiveBayesClassifier:
-    def __init__(self):
-        self.class_prior_probs = {}
-        self.feature_likelihoods = {}
-        self.class_labels = []
 
     def fit(self, features, labels):
-        self.class_labels = np.unique(labels)
         n_samples, n_features = features.shape
+        self.classes = np.unique(labels)
+        n_classes = len(self.classes)
 
-        for label in self.class_labels:
-            features_for_class = features[labels == label]
-            self.class_prior_probs[label] = len(features_for_class) / n_samples
-            self.feature_likelihoods[label] = {}
-            for feature_index in range(n_features):
-                feature_values, counts = np.unique(features_for_class.iloc[:, feature_index], return_counts=True)
-                self.feature_likelihoods[label][feature_index] = {value: count / len(features_for_class) for value, count in zip(feature_values, counts)}
+        self.means = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.variances = np.zeros((n_classes, n_features), dtype=np.float64)
+        self.priors = np.zeros(n_classes, dtype=np.float64)
 
-    def predict(self, features):
-        predictions = []
-        for _, sample in features.iterrows():
-            posterior_probs = {}
-            for label in self.class_labels:
-                prior_prob = self.class_prior_probs[label]
-                likelihood = 1
-                for feature_index in range(features.shape[1]):
-                    likelihood *= self.feature_likelihoods[label].get(feature_index, {}).get(sample[feature_index], 1e-10)
-                posterior_probs[label] = prior_prob * likelihood
-            
-            predicted_label = max(posterior_probs, key=posterior_probs.get)
-            predictions.append(predicted_label)
-        return predictions
+        for idx, cls in enumerate(self.classes):
+            features_cls = features[labels == cls]
+            self.means[idx, :] = features_cls.mean(axis=0)
+            self.variances[idx, :] = features_cls.var(axis=0)
+            self.priors[idx] = features_cls.shape[0] / float(n_samples)
 
-# Example usage
-data = {
-    'feature1': [1, 1, 1, 0, 0, 0, 1, 0],
-    'feature2': [1, 0, 1, 1, 0, 0, 0, 0],
-    'label': ['A', 'A', 'A', 'B', 'B', 'B', 'A', 'B']
-}
+    def predict(self, test_features):
+        predictions = [
+            self._predict_single(sample) for sample in test_features
+        ]
+        return np.array(predictions)
 
-# df = pd.DataFrame(data)
-# X = df[['feature1', 'feature2']]
-# y = df['label']
+    def _predict_single(self, sample):
+        posteriors = []
 
-# # Initialize and train the model
-# model = NaiveBayesClassifier()
-# model.fit(X, y)
+        for idx, cls in enumerate(self.classes):
+            log_prior = np.log(self.priors[idx])
+            log_posterior = np.sum(
+                np.log(self._probability_density_function(idx, sample))
+            )
+            total_posterior = log_posterior + log_prior
+            posteriors.append(total_posterior)
 
-# # Predicting on the training data
-# predictions = model.predict(X)
-# print(predictions)
+        return self.classes[np.argmax(posteriors)]
 
-# # Function to calculate accuracy
-# def calculate_accuracy(true_labels, predicted_labels):
-#     return np.sum(true_labels == predicted_labels) / len(true_labels)
-
-# # Calculate accuracy
-# accuracy_score = calculate_accuracy(y, predictions)
-# print(f'Accuracy: {accuracy_score * 100:.2f}%')
+    # Gaussian Distribution
+    def _probability_density_function(self, class_idx, sample):
+        mean = self.means[class_idx]
+        variance = self.variances[class_idx]
+        return np.exp(-((sample - mean) ** 2) / (2 * variance)) / np.sqrt(
+            2 * np.pi * variance
+        )
