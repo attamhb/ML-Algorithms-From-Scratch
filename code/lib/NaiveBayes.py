@@ -44,3 +44,35 @@ class NaiveBayesClassifier:
         return np.exp(-((sample - mean) ** 2) / (2 * variance)) / np.sqrt(
             2 * np.pi * variance
         )
+
+    # beroulli distribution
+    def _bernoulli_probability(self, x_d, theta_dc):
+        return theta_dc if x_d == 1 else (1 - theta_dc)
+
+    # beroulli distribution
+    def _p_x_given_y_binary(self, x, y_c, theta):
+        D = len(x)
+        probability = 1.0
+
+        for d in range(D):
+            # Assume theta is a 2D array where theta[d][y_c] gives theta_dc
+            theta_dc = theta[d][y_c]
+            probability *= self._bernoulli_probability(x[d], theta_dc)
+
+        return probability
+
+    def _categorical_probability(self, x_d, theta_dc):
+        """Compute the categorical probability for a single x_d given theta_dc."""
+        return theta_dc[x_d - 1]  # Adjust for 0-based index
+
+    def _p_x_given_y_catorical(self, x, y_c, theta):
+        """Compute the probability p(x | y=c, theta) as the product of categorical distributions."""
+        D = len(x)  # Number of components
+        probability = 1.0
+
+        for d in range(D):
+            # Access the appropriate theta value for the observation and class
+            theta_dc = theta[d][y_c]
+            probability *= self.categorical_probability(x[d], theta_dc)
+
+        return probability
